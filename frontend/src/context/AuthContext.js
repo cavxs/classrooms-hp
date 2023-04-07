@@ -20,6 +20,11 @@ export const AuthProvider = ({ children }) => {
     },
   });
 
+  // if there is an error in the response of apx (which is the main axios instance used to com. with the server)
+  // then check if the error is unauthorized access in which case we use the refresh token again to geneerate a new access token
+
+  
+
   const storedTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
 
   const [authTokens, setAuthTokens] = useState(storedTokens);
@@ -42,11 +47,12 @@ export const AuthProvider = ({ children }) => {
       throw new Error(
         "There is no access token passed to the saveTokens function."
       );
-    setAuthTokens({ ...authTokens, ...tokens });
+    const newtokens = { ...authTokens, ...tokens }
+    setAuthTokens(newtokens);
     // decode and store the user
     setUser(jwtDecode(tokens.access));
     // store the tokens to the local storage
-    localStorage.setItem("authTokens", JSON.stringify(tokens));
+    localStorage.setItem("authTokens", JSON.stringify(newtokens));
   };
 
   const navigate = useNavigate();
@@ -96,13 +102,37 @@ export const AuthProvider = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const response = await authAxios.get("/refresh");
+      const response = await authAxios.get("/refresh/");
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
 
+  apx.interceptors.response.use((res)=> {
+    return res;
+  }, (err) =>{
+    // check if the error is unauthorized access
+    if (err.response.status === 401) {
+      // generate a new access token and try again
+      console.log("there is a 401 error");
+      console.log(authTokens);
+      return authAxios.post('/refresh/', {"refresh": authTokens?.refresh})
+        .then((res) => {
+          // got the access token as res
+          saveTokens(res.data)
+          // get and return the data that i needed in the beginning
+          err.config.headers['Authorization'] = 'Bearer ' + res.data.access;
+          return apx.request(err.config);
+        })
+        .catch(function (error) {
+          // todo: make the failure to get access token. send to login page possibly.
+          console.log(error);
+          logout(true)
+          return;
+        });
+    }
+  })
   const cData = {
     user,
     register,

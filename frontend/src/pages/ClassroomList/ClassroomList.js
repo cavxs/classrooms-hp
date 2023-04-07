@@ -57,9 +57,10 @@ const ClassroomList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    apx.get("classrooms/").then((r) => {
-      setClassrooms(r.data);
-    });
+
+      apx.get("classrooms/").then((r) => {
+        setClassrooms(r?.data);
+      });
   }, []);
 
   return (
