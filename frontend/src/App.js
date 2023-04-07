@@ -15,7 +15,7 @@ function App() {
       <Routes>
         {/* <Route index element={<Home />} /> */}
         <Route element={<NavLayout />}>
-          <Route path="classroom/:id" />
+          <Route path="classroom/:id" /> 
           <Route path="classrooms" element={<ClassroomList />} />
           <Route path="exam/:id" element={<Exam />} />
           <Route path="profile" />

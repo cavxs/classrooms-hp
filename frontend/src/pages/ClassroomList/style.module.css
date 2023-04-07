@@ -16,6 +16,37 @@ h2 {
   user-select: none;
 }
 
+.cbuttons div h2 {
+  margin: 0;
+}
+
+.classrooms {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.classroom-wrapper {
+  display: block;
+  width: 50%;
+}
+.classroom {
+  display: block;
+
+  width: 400px;
+  height: 200px;
+  margin: auto;
+  cursor: pointer;
+border-radius: 20px;
+  background-color: #f1f1f1;
+  text-align: center;
+  line-height: 150px;
+  user-select: none;
+}
+
 .overlay {
   position: absolute;
   top: 0;

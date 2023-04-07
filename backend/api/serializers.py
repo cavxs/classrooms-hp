@@ -31,4 +31,4 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class ClassroomsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
-        fields = ['name']
+        fields = ['id', 'name']

@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import styles from "./style.module.css";
+import { useNavigate } from "react-router-dom";
 
 const ClassroomCreation = ({ closepopup }) => {
   const [name, setName] = useState("");
@@ -35,10 +36,26 @@ const Overlay = ({ closepopup }) => (
   <div onClick={closepopup} className={styles["overlay"]}></div>
 );
 
+const ClassroomButton = ({cinfo, nav}) => {
+  return (
+    <div className={styles["classroom-wrapper"]}>
+  <div onClick={nav} className={styles["classroom"]}>
+    <div>
+
+    <h2>{cinfo.name}</h2>
+    </div>
+  </div>
+    </div>
+  );
+}
+
 const ClassroomList = () => {
   const [popup, setPopup] = useState("");
   const [classrooms, setClassrooms] = useState([]);
   const { apx } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     apx.get("classrooms/").then((r) => {
       setClassrooms(r.data);
@@ -48,9 +65,9 @@ const ClassroomList = () => {
   return (
     <div>
       {popup && <ClassroomCreation closepopup={() => setPopup("")} />}
-      <div>
+      <div className={styles["classrooms"]}>
         {classrooms.length ? (
-          classrooms.map((c) => <div>{c.name}</div>)
+          classrooms.map((c, i) => <ClassroomButton key={i} nav={()=> navigate(`/classroom/${c.id}`)} cinfo={{name:c.name}}>{c.name}</ClassroomButton>)
         ) : (
           <h2>No classrooms</h2>
         )}
