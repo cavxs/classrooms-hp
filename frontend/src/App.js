@@ -9,6 +9,7 @@ import Register from "./pages/Auth/Register";
 import NavLayout from "./layout/NavLayout";
 import ClassroomList from "./pages/ClassroomList/ClassroomList";
 import PrivateRoutes from "./context/PrivateRoutes";
+import Classroom from "./pages/Classroom/Classroom";
 
 function App() {
   return (
@@ -16,14 +17,14 @@ function App() {
       <Routes>
         {/* <Route index element={<Home />} /> */}
         <Route element={<NavLayout />}>
-          <Route path="classroom/:id" /> 
+          <Route path="classroom/:id" element={<Classroom />}/> 
           <Route element={<PrivateRoutes />}>
             <Route path="classrooms" element={<ClassroomList />} />
 
           </Route>
           <Route path="exam/:id" element={<Exam />} />
           <Route path="profile" />
-          <Route path="create" />
+          <Route path="make" element={<ExamMaker />} />
           <Route element={<AuthLayout />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />

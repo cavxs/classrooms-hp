@@ -29,6 +29,15 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name']
 
 class ClassroomsSerializer(serializers.ModelSerializer):
+    teacher_firstname = serializers.SerializerMethodField() 
+    students = serializers.SerializerMethodField()
+
     class Meta:
         model = Classroom
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students']
+
+    def get_teacher_firstname(self, obj):
+        return obj.teacher.first_name
+    
+    def get_students(self, obj):
+        return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name} for s in obj.students.all()]

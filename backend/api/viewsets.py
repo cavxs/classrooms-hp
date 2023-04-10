@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from .serializers import RegistrationSerializer, UserInfoSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import action
@@ -36,6 +37,12 @@ class UserInfoViewSet(ViewSet):
 class ClassroomsViewSet(ViewSet):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomsSerializer
+
+    def retrieve(self, req, pk=None):
+        queryset = Classroom.objects.all()
+        classroom = get_object_or_404(queryset, pk=pk)
+        serializer = ClassroomsSerializer(classroom)
+        return Response(serializer.data)
 
     def list(self, req):
         queryset = Classroom.objects.all()

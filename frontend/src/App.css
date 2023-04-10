@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+
+button {
+  width: 100px;
+  height: 50px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
