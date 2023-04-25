@@ -36,18 +36,17 @@ const Overlay = ({ closepopup }) => (
   <div onClick={closepopup} className={styles["overlay"]}></div>
 );
 
-const ClassroomButton = ({cinfo, nav}) => {
+const ClassroomButton = ({ cinfo, nav }) => {
   return (
     <div className={styles["classroom-wrapper"]}>
-  <div onClick={nav} className={styles["classroom"]}>
-    <div>
-
-    <h2>{cinfo.name}</h2>
-    </div>
-  </div>
+      <div onClick={nav} className={styles["classroom"]}>
+        <div>
+          <h2>{cinfo.name}</h2>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 const ClassroomList = () => {
   const [popup, setPopup] = useState("");
@@ -57,10 +56,9 @@ const ClassroomList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-
-      apx.get("classrooms/").then((r) => {
-        setClassrooms(r?.data);
-      });
+    apx.get("classrooms/").then((r) => {
+      setClassrooms(r?.data);
+    });
   }, []);
 
   return (
@@ -68,7 +66,15 @@ const ClassroomList = () => {
       {popup && <ClassroomCreation closepopup={() => setPopup("")} />}
       <div className={styles["classrooms"]}>
         {classrooms.length ? (
-          classrooms.map((c, i) => <ClassroomButton key={i} nav={()=> navigate(`/classroom/${c.id}`)} cinfo={{name:c.name}}>{c.name}</ClassroomButton>)
+          classrooms.map((c, i) => (
+            <ClassroomButton
+              key={i}
+              nav={() => navigate(`/classroom/${c.id}`)}
+              cinfo={{ name: c.name }}
+            >
+              {c.name}
+            </ClassroomButton>
+          ))
         ) : (
           <h2>No classrooms</h2>
         )}

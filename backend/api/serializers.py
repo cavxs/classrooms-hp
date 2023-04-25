@@ -34,7 +34,7 @@ class ClassroomsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students']
+        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students', 'code']
 
     def get_teacher_firstname(self, obj):
         return obj.teacher.first_name

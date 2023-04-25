@@ -4,18 +4,25 @@ from django.db import models
 
 # Create your models here.
 
-def pkgen():
+def pkgen(length):
     from base64 import b32encode
     from hashlib import sha1
     from random import random
     rude = ('lol',)
     bad_pk = True
     while bad_pk:
-        pk = b32encode(sha1(str(random()).encode('utf-8')).digest()).lower()[:10].decode("utf-8") 
+        pk = b32encode(sha1(str(random()).encode('utf-8')).digest()).lower()[:length].decode("utf-8") 
         bad_pk = False
         for rw in rude:
             if pk.find(rw) >= 0: bad_pk = True
     return pk
+
+def exam_code_gen():
+    return pkgen(10)
+
+def classroom_code_gen():
+    return pkgen(6)
+
 
 class User(AbstractUser):
     pass
@@ -26,7 +33,11 @@ class Classroom(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="classrooms_created")
     students = models.ManyToManyField(User, blank=False, related_name="classrooms_joined")
     exam = models.ForeignKey("Exam", blank=True, null=True, default=None, on_delete=models.CASCADE, related_name="classroom")
-    
+    code = models.CharField(max_length=6, blank=False, null=False, default=classroom_code_gen)
+
+    class Meta:
+        unique_together = (('id', 'code'))
+
     def __str__(self):
         return f"{self.teacher}'s classroom: {self.name}"
 
@@ -55,7 +66,7 @@ class Question(models.Model):
         return f"{self.question_type} question: {self.text}" 
 
 class Exam(models.Model):
-    id = models.CharField(max_length=10, primary_key=True, default=pkgen)
+    id = models.CharField(max_length=10, primary_key=True, default=exam_code_gen)
     name= models.CharField(max_length=30)
     teacher = models.ForeignKey(User, default=None, on_delete=models.CASCADE, related_name='exams')
     questions = models.JSONField()

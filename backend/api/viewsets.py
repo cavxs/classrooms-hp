@@ -38,14 +38,18 @@ class ClassroomsViewSet(ViewSet):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomsSerializer
 
+    def get_queryset(self):
+        return Classroom.objects.filter(students=self.request.user)
+
     def retrieve(self, req, pk=None):
-        queryset = Classroom.objects.all()
+        queryset = self.get_queryset()
         classroom = get_object_or_404(queryset, pk=pk)
         serializer = ClassroomsSerializer(classroom)
         return Response(serializer.data)
 
     def list(self, req):
-        queryset = Classroom.objects.all()
+        # get only the classrooms the user is in
+        queryset = self.get_queryset()
         serializer = ClassroomsSerializer(queryset, many=True)
         return Response(serializer.data)
 
