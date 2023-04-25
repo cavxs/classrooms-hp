@@ -7,8 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from .models import User, Classroom
-from .serializers import ClassroomsSerializer
+from .models import User, Classroom, Exam
+from .serializers import ClassroomsSerializer, ExamsSerializer
 
 class AuthViewSet(ViewSet):
     @action(detail=False, methods=['post'])
@@ -56,3 +56,18 @@ class ClassroomsViewSet(ViewSet):
         serializer.save(teacher=req.user)
         return Response(serializer.data,status=201)
         
+
+class ExamsViewset(ViewSet):
+    queryset = Exam.objects.all()
+    serializer_class = ExamsSerializer
+
+    def list(self, req):
+        queryset = Exam.objects.all()
+        serializer = ExamsSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, req):
+        serializer = ExamsSerializer(data=req.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(teacher=req.user)
+        return Response(serializer.data,status=201)

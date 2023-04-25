@@ -25,7 +25,8 @@ class Classroom(models.Model):
     name = models.CharField(max_length=50, blank=False, default="My Classroom")
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="classrooms_created")
     students = models.ManyToManyField(User, blank=False, related_name="classrooms_joined")
-
+    exam = models.ForeignKey("Exam", blank=True, null=True, default=None, on_delete=models.CASCADE, related_name="classroom")
+    
     def __str__(self):
         return f"{self.teacher}'s classroom: {self.name}"
 
@@ -56,9 +57,8 @@ class Question(models.Model):
 class Exam(models.Model):
     id = models.CharField(max_length=10, primary_key=True, default=pkgen)
     name= models.CharField(max_length=30)
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exams')
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name="exams")
-    questions = models.ManyToManyField(Question, related_name="exams")
+    teacher = models.ForeignKey(User, default=None, on_delete=models.CASCADE, related_name='exams')
+    questions = models.JSONField()
 
     def __str__(self) -> str:
         return f"{self.name} exam on {self.classroom.name} by {self.teacher.username}"

@@ -10,6 +10,7 @@ import NavLayout from "./layout/NavLayout";
 import ClassroomList from "./pages/ClassroomList/ClassroomList";
 import PrivateRoutes from "./context/PrivateRoutes";
 import Classroom from "./pages/Classroom/Classroom";
+import ExamMaker from "./pages/ExamMaker/ExamMaker";
 
 function App() {
   return (

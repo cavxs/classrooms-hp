@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Classroom
+from .models import User, Classroom, Exam
 
 class RegistrationSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=True)
@@ -41,3 +41,12 @@ class ClassroomsSerializer(serializers.ModelSerializer):
     
     def get_students(self, obj):
         return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name} for s in obj.students.all()]
+
+
+class ExamsSerializer(serializers.ModelSerializer):
+    classroom = serializers.CharField(required=False)
+    class Meta:
+        model = Exam
+        fields = ['id', 'name', 'teacher', 'classroom', 'questions']
+        extra_kwargs = {"id": {"read_only": True}}
+    #TODO: validation

@@ -1,0 +1,36 @@
+h1 {
+  text-align: center;
+}
+.examname {
+  display: block;
+  margin: auto;
+  text-align: center;
+  font-weight: bold;
+}
+.question {
+  margin: 20px 10px;
+}
+
+input {
+  font-size: large;
+}
+
+.question > input {
+  width: 90%;
+  margin-left: 10px;
+}
+
+.question ol {
+  width: 70%;
+  list-style-type: lower-alpha;
+}
+
+.question ol li {
+  margin-bottom: 8px;
+  width: 100%;
+}
+.question ol input {
+  width: 90%;
+  margin-right: 10px;
+  display: inline-block;
+}
