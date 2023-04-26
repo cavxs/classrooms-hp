@@ -40,10 +40,12 @@ const Classroom = () => {
             <li>studnet 3</li>
           </ul>
         </div>
-        <div className={styles["buttons"]}>
-          <button onClick={() => showPopup("add")(true)}>Add Students</button>
-          <button>Assign Exam</button>
-        </div>
+        {classroomData?.is_owner && (
+          <div className={styles["buttons"]}>
+            <button onClick={() => showPopup("add")(true)}>Add Students</button>
+            <button>Assign Exam</button>
+          </div>
+        )}
       </div>
       {popups.add && (
         <Popup

@@ -34,13 +34,45 @@ class ClassroomsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students', 'code']
+        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students']
 
     def get_teacher_firstname(self, obj):
         return obj.teacher.first_name
     
     def get_students(self, obj):
         return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name} for s in obj.students.all()]
+
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+
+        req = self.context.get('request')
+        is_owner = req.user == obj.teacher
+
+        if is_owner:
+            data['code'] = obj.code
+            data['is_owner'] = True
+        
+        return data
+
+class ClassroomListSerializer(serializers.ModelSerializer):
+    teacher_firstname = serializers.SerializerMethodField()
+    class Meta:
+        model=Classroom
+        fields = ['id', 'name', 'teacher_firstname']
+
+    def get_teacher_firstname(self, obj):
+        return obj.teacher.first_name
+
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+
+        req = self.context.get('request')
+        is_owner = req.user == obj.teacher
+
+        if is_owner:
+            data['is_owner'] = True
+        
+        return data
 
 
 class ExamsSerializer(serializers.ModelSerializer):
