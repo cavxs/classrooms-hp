@@ -1,31 +1,131 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 
-import styles from "./Exam.module.css";
+import styles from "./style.module.css";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
 
-// The page where either you take the exam or see the exam depending on the app's context.
-const Exam = ({ questions }) => {
-  const [answerData, setAnswerData] = useState({});
-  const loadExamData = () => {};
-  useEffect(() => {}, []);
+const Question = ({ q, n, AD, SAFQ }) => (
+  <div className={styles["question"]}>
+    <h2>
+      Q{n + 1}. {q.text}
+    </h2>
+    <input
+      type="text"
+      className={styles["qninp"]}
+      placeholder="Type your answer"
+      value={AD[n]}
+      onChange={(e) => SAFQ(n, e.target.value)}
+    />
+  </div>
+);
 
+const QuestionsHandler = ({ AD, SAFQ, questions }) => {
   return (
     <div>
-      <header>
-        <h2 className={styles["exam-name"]}>Biology Exam</h2>
-        <h3 className={styles["classroom"]}>Amira's Classroom</h3>
-      </header>
       {questions &&
         questions.map((q, i) => (
-          <div key={i} className={styles["question"]}>
-            <h3>
-              Q{i + 1}. {q.q}
-            </h3>
-            <input type="text" placeholder="Type your answer" />
-          </div>
+          <Question q={q} n={i} key={i} SAFQ={SAFQ} AD={AD} />
         ))}
-      <div>
-        <div className={styles["button exam-end"]}>End exam</div>
-      </div>
+    </div>
+  );
+};
+
+// The page where either you take the exam or see the exam depending on the app's context.
+const Exam = () => {
+  const [answerData, setAnswerData] = useState([]);
+  const [examData, setExamData] = useState({ started: false, questions: [] });
+  const { apx } = useContext(AuthContext);
+  const { id: eid } = useParams();
+  useEffect(() => {
+    console.log(eid);
+    apx.get(`exams/get/${eid}/`).then((res) => {
+      console.log(res.data);
+      setExamData((old) => ({ ...old, ...res.data }));
+    });
+  }, []);
+
+  const navigate = useNavigate();
+
+  const setAnswerForQuestion = (n, ans) => {
+    setAnswerData((old) => {
+      const f = structuredClone(old);
+      f[n] = ans;
+      return f;
+    });
+  };
+  console.log(answerData);
+
+  return (
+    <div className={styles["main-container"]}>
+      {!examData.started ? (
+        <div className={styles["start-pg-container"]}>
+          <h2 className={[styles["exam-name"], "big-heading"].join(" ")}>
+            {examData?.name}
+          </h2>
+          <h2 className={styles["classroom"]}>
+            {examData?.teacher_name}'s Classroom
+          </h2>
+          {!examData?.taken ? (
+            <button
+              className={[styles["btn"], "button hover-effect"].join(" ")}
+              onClick={() => {
+                apx.get(`exams/start/${eid}/`).then((res) => {
+                  if (res.data) {
+                    setExamData((old) => ({
+                      ...old,
+                      started: true,
+                      questions: res.data?.questions,
+                    }));
+                    setAnswerData((old) =>
+                      Array(res.data.questions.length).join(".").split(".")
+                    );
+                  }
+                });
+              }}
+            >
+              Start
+            </button>
+          ) : (
+            <>
+              <h3 className={styles["msg"]}>Exam taken already</h3>
+              <button
+                style={{ width: 200 }}
+                className={[styles["btn"], "button hover-effect"].join(" ")}
+                onClick={() => {
+                  navigate("answers");
+                }}
+              >
+                See Answers
+              </button>
+            </>
+          )}
+        </div>
+      ) : (
+        <>
+          <QuestionsHandler
+            AD={answerData}
+            SAFQ={setAnswerForQuestion}
+            questions={examData?.questions}
+          />
+
+          <div>
+            <button
+              className={[styles["exam-end"], "button"].join(" ")}
+              onClick={() => {
+                // submit answers
+                apx
+                  .post(`exams/submit/${eid}/`, { data: answerData })
+                  .then((res) => {
+                    console.log(res);
+                    navigate("/classrooms");
+                  });
+              }}
+            >
+              End exam
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

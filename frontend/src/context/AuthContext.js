@@ -48,7 +48,14 @@ export const AuthProvider = ({ children }) => {
     const newtokens = { ...authTokens, ...tokens };
     setAuthTokens(newtokens);
     // decode and store the user
-    setUser(jwtDecode(tokens.access));
+    setUser(() => {
+      const decodation = jwtDecode(tokens.access);
+
+      console.log(decodation, newtokens);
+      if (!decodation?.username && newtokens?.user?.username)
+        decodation["username"] = newtokens.user.username;
+      return decodation;
+    });
     // store the tokens to the local storage
     localStorage.setItem("authTokens", JSON.stringify(newtokens));
   };

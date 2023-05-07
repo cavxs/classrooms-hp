@@ -4,7 +4,7 @@ import styles from "./style.module.css";
 const Popup = ({
   title = "unnamed",
   text = "",
-  buttons = [{ text: "Ok", click: "close" }],
+  buttons = [{ text: "Ok" }],
   shown,
   children,
 }) => {
@@ -17,7 +17,11 @@ const Popup = ({
         {children}
         <div className={styles["buttons"]}>
           {buttons.map((b, i) => (
-            <button key={i} onClick={b.click || (() => shown(false))}>
+            <button
+              className="button"
+              key={i}
+              onClick={b.click || (() => shown(false))}
+            >
               {b.text}
             </button>
           ))}

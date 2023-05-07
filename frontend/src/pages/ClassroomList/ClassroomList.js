@@ -4,45 +4,19 @@ import styles from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 import Popup from "../../components/Popup/Popup";
 
-const ClassroomCreation = ({ closepopup }) => {
-  const [name, setName] = useState("");
-  const { apx } = useContext(AuthContext);
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // send a creation request to the server which will be handled by the creation of a classroom in the database
-    console.log(apx);
-    apx.post("classrooms/", { name });
-  };
-  return (
-    <>
-      <Overlay closepopup={closepopup} />
-      <div className={styles["popup"]}>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Classroom name"
-          />
-          <input type="submit" />
-        </form>
-        <button onClick={closepopup}>Cancel</button>
-      </div>
-    </>
-  );
-};
-
-const Overlay = ({ closepopup }) => (
-  <div onClick={closepopup} className={styles["overlay"]}></div>
-);
-
 const ClassroomButton = ({ cinfo, nav }) => {
+  console.log(cinfo);
   return (
     <div className={styles["classroom-wrapper"]}>
-      <div onClick={nav} className={styles["classroom"]}>
+      <div
+        onClick={nav}
+        className={["hover-effect", styles["classroom"]].join(" ")}
+      >
         <div>
           <h2>{cinfo.name}</h2>
+          <p>
+            Created by <span style={{ color: "#202c39" }}>{cinfo.teacher}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -56,11 +30,14 @@ const ClassroomList = () => {
 
   const [code, setCode] = useState("");
 
+  const [classroomName, setClassroomName] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     apx.get("classrooms/").then((r) => {
       if (r?.data) {
+        console.log(r.data);
         const cs = r?.data;
         const ownerClassrooms = cs.filter((obj) => obj.is_owner === true);
         const joinedClassrooms = cs.filter((obj) => obj.is_owner !== true);
@@ -72,9 +49,42 @@ const ClassroomList = () => {
   return (
     <div>
       {popups.classroom && (
-        <ClassroomCreation
-          closepopup={() => setPopups((old) => ({ ...old, classroom: false }))}
-        />
+        // <ClassroomCreation
+        //   closepopup={() => setPopups((old) => ({ ...old, classroom: false }))}
+        // />
+        <Popup
+          shown={(v) => setPopups((old) => ({ ...old, classroom: v }))}
+          title="Create a Classroom"
+          buttons={[
+            { text: "Cancel" },
+            {
+              text: "Create",
+              click: () => {
+                setPopups((old) => ({ ...old, classroom: false }));
+                apx.post("classrooms/", { name: classroomName }).then((res) => {
+                  console.log(res);
+                  if (res?.status === 201) {
+                    setClassrooms((old) => {
+                      return {
+                        owner: [...old.owner, res.data],
+                        non_owner: old.non_owner,
+                      };
+                    });
+                  } else {
+                    // TODO: make an error message
+                  }
+                });
+              },
+            },
+          ]}
+        >
+          <input
+            style={{ marginTop: 20 }}
+            type="text"
+            value={classroomName}
+            onChange={(e) => setClassroomName(e.target.value)}
+          />
+        </Popup>
       )}
       {popups.join && (
         <Popup
@@ -90,7 +100,12 @@ const ClassroomList = () => {
                   console.log(res);
                   if (res?.status === 201) {
                     setPopups((old) => ({ ...old, join: false }));
-                    setClassrooms((old) => [...old, res.data]);
+                    setClassrooms((old) => {
+                      return {
+                        owner: old.owner,
+                        non_owner: [...old.non_owner, res.data],
+                      };
+                    });
                   } else {
                     // TODO: make an error message
                   }
@@ -107,45 +122,53 @@ const ClassroomList = () => {
           />
         </Popup>
       )}
-      {classrooms.non_owner?.length && (
+      {classrooms.non_owner?.length ? (
         <>
-          <h1>Joined Classrooms</h1>
+          <h1 className="big-heading">Joined Classrooms</h1>
           <div className={styles["classrooms"]}>
             {classrooms.non_owner.map((c, i) => (
               <ClassroomButton
                 key={i}
                 nav={() => navigate(`/classroom/${c.id}`)}
-                cinfo={{ name: c.name }}
+                cinfo={{ name: c.name, teacher: c.teacher_firstname }}
               >
                 {c.name}
               </ClassroomButton>
             ))}
           </div>
         </>
-      )}
+      ) : null}
 
-      {classrooms.owner?.length && (
+      {classrooms.owner?.length ? (
         <>
-          <h1>Created Classrooms</h1>
+          <h1 className="big-heading">Created Classrooms</h1>
           <div className={styles["classrooms"]}>
             {classrooms.owner.map((c, i) => (
               <ClassroomButton
                 key={i}
                 nav={() => navigate(`/classroom/${c.id}`)}
-                cinfo={{ name: c.name }}
+                cinfo={{ name: c.name, teacher: "You" }}
               >
                 {c.name}
               </ClassroomButton>
             ))}
           </div>
         </>
-      )}
+      ) : null}
 
       <div className={styles["cbuttons"]}>
-        <div onClick={() => setPopups((old) => ({ ...old, join: true }))}>
+        <div
+          className="button hover-effect"
+          style={{ width: 300 }}
+          onClick={() => setPopups((old) => ({ ...old, join: true }))}
+        >
           Join a classroom
         </div>
-        <div onClick={() => setPopups((old) => ({ ...old, classroom: true }))}>
+        <div
+          className="button hover-effect"
+          style={{ width: 300 }}
+          onClick={() => setPopups((old) => ({ ...old, classroom: true }))}
+        >
           Create a classroom
         </div>
       </div>

@@ -31,8 +31,8 @@ class User(AbstractUser):
 class Classroom(models.Model):
     name = models.CharField(max_length=50, blank=False, default="My Classroom")
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name="classrooms_created")
-    students = models.ManyToManyField(User, blank=False, related_name="classrooms_joined")
-    exam = models.ForeignKey("Exam", blank=True, null=True, default=None, on_delete=models.CASCADE, related_name="classroom")
+    students = models.ManyToManyField(User, blank=True, related_name="classrooms_joined")
+    exam = models.OneToOneField("Exam", blank=True, null=True, default=None, on_delete=models.SET_DEFAULT, related_name="classroom")
     code = models.CharField(max_length=6, blank=False, null=False, default=classroom_code_gen)
 
     class Meta:
@@ -73,3 +73,18 @@ class Exam(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} exam on {self.classroom.name} by {self.teacher.username}"
+    
+
+class ExamTemplate(models.Model):
+    name = models.CharField(max_length=30)
+    teacher = models.ForeignKey(User, default=None, on_delete=models.CASCADE, related_name='exam_templates')
+    questions = models.JSONField()
+
+    def __str__(self) -> str:
+        return f"\"{self.name}\" Exam Template by {self.teacher.username}"
+
+class Answers(models.Model):
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="answers")
+    taker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answers")
+    data = models.JSONField()
+    grading = models.JSONField(blank=True, null=True)

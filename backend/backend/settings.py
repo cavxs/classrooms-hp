@@ -118,6 +118,10 @@ REST_FRAMEWORK = {
     )
 }
 
+SIMPLE_JWT = {
+    'TOKEN_OBTAIN_SERIALIZER': 'app.serializers.CustomTokenObtainPairSerializer'
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

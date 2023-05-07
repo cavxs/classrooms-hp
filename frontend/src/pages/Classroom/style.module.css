@@ -1,43 +1,185 @@
-.wrapper {
-    padding: 0 15px;
-    box-sizing: border-box;
+.teacher {
+  margin: -38px 0 20px;
+  text-align: center;
+  font-size: 26px;
+  text-transform: capitalize;
+  font-weight: 600;
+  color: var(--darker);
 }
 
-h2 {
-    text-align: left;
-    margin-bottom: 0;
+.layout {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }
-h3 {
-    margin-top: 5px
+
+.left {
+  width: 60%;
 }
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding-left: 50px;
+  width: 40%;
+}
+
+.active-exam {
+  display: flex;
+  width: 90%;
+  height: 120px;
+  border-radius: 300px;
+  padding: 0 30px;
+  background-color: var(--yellow);
+  flex-direction: row;
+  cursor: default;
+}
+
+.exam-status {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.exam-status * {
+  margin: 0;
+}
+
+.exam-status h5 {
+  font-size: 20px;
+  color: #727272;
+  font-weight: 600;
+  padding-left: 6px;
+  margin-bottom: -4px;
+}
+
+.exam-status h3 {
+  font-size: 37px;
+  font-weight: 700;
+  color: var(--darker);
+}
+.exam-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-items: flex-end;
+  flex-grow: 1;
+}
+
+.exam-buttons button {
+  width: 80px;
+  height: 80px;
+  border-radius: 100px;
+  background-color: var(--orange);
+  color: white;
+  font-size: 30px;
+}
+
 .main {
-    display: flex;
-    flex-direction: row;
-    margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
 }
 .student-list {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 300px;   
+  display: flex;
+  flex-direction: column;
+  width: 300px;
 }
-button {
 
+.ownerbtn {
+  width: 90%;
+  height: 70px;
+  margin-bottom: 20px;
 }
 
 .student-list ul {
-    list-style: none;
-    margin: 0;
+  list-style: none;
+  margin: 50px 0 0;
 }
 
 .student-list ul li {
-    height: 30px;
-    background-color: #f1f1f1;
-    margin-bottom: 10px;
-    width: 95%;
-    user-select: none;
-    cursor: pointer;
+  height: 50px;
+  margin-bottom: 30px;
+  width: 95%;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: 900;
+  font-size: 25px;
+  color: var(--darker);
+}
+
+.st-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  float: right;
+  width: 100px;
+  height: 100%;
+  /* background-color: red; */
+}
+
+.st-options div {
+  width: 20px;
+  height: 20px;
+  background-color: var(--red);
+  border-radius: 20px;
+}
+
+.st-options h2 {
+  font-size: 30px;
+  margin-left: 7px;
+}
+
+.last-grade {
+  width: 80%;
+  aspect-ratio: 2;
+  /* height: 100px; */
+  border-radius: 29px;
+  background-color: var(--yellow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 16px 20px 57px 9px rgba(0, 0, 0, 0.1);
+}
+.last-grade * {
+  margin: 0;
+}
+.last-grade h5 {
+  font-size: 15px;
+  color: #727272;
+  font-weight: 600;
+  padding-left: 6px;
+  margin-bottom: -4px;
+}
+
+.last-grade h3 {
+  font-size: 53px;
+  font-weight: 700;
+  color: var(--darker);
+}
+
+.examlist {
+  list-style: none;
+  margin: 20px 0 0 0;
+  padding: 0;
+}
+
+.examlist li {
+  height: 30px;
+  background-color: #f1f1f1;
+  margin: 0 0 10px 0;
+  width: 100%;
+  line-height: 30px;
+  padding-left: 20px;
+  box-sizing: border-box;
+  user-select: none;
+  cursor: pointer;
 }

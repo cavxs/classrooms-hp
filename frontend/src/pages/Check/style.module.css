@@ -1,0 +1,80 @@
+.list {
+  list-style-type: none;
+  width: 80%;
+  margin: 20px auto;
+}
+
+.list li {
+  display: block;
+  width: 100%;
+  height: 40px;
+  font-size: 20px;
+  background-color: var(--yellow);
+  border-radius: 20px;
+  color: var(--darker);
+  line-height: 40px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  cursor: pointer;
+}
+
+.ansof {
+  color: var(--lighter);
+}
+
+/* TODO: merge all the qninp into one style that can be accessed by the three pages */
+
+.correcting {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.correcting button {
+  margin-left: 20px;
+  width: 90px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.correcting button:nth-child(1) {
+  background-color: #71ac5c;
+}
+.correcting button:nth-child(2) {
+  background-color: #b65f5f;
+}
+
+.qninp {
+  position: relative;
+  background-color: #f3f3f3;
+  border: none;
+  outline: none;
+  padding: 0 20px;
+  height: 35px;
+  font-weight: 300;
+  font-size: 23px;
+
+  transition: box-shadow 0.3s;
+  box-shadow: inset 0px 0px #d0e7c8;
+  z-index: 2;
+  /* transition: box-shadow 0.5s; */
+}
+.qninp .false-slider {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  box-shadow: inset 0px 0px #fccbcb;
+
+  transition: box-shadow 0.3s;
+}
+.true {
+  box-shadow: inset 100vw 0px #d0e7c8;
+  /* animation: true 0.5s forwards; */
+}
+
+.false .false-slider {
+  box-shadow: inset -100vw 0px #fccbcb;
+}

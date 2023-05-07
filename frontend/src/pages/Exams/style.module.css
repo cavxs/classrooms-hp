@@ -1,0 +1,35 @@
+.exam-div {
+  width: 320px;
+  height: 350px;
+  padding: 20px;
+  background-color: var(--yellow);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.exam-div > h2 {
+  text-align: left;
+  margin: 90px 0 0;
+  font-size: 30px;
+  color: var(--darker);
+  font-weight: 600;
+}
+
+.exam-div > p {
+  margin-top: 5px;
+  font-size: 20px;
+  color: #727272;
+}
+
+.exam-div p span {
+  color: var(--darker);
+}
+.exams-list {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+
+.exams-list div {
+  margin-left: 20px;
+}

@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap");
+
+:root {
+  --orange: #f29559;
+  --lighter: #283845;
+  --darker: #202c39;
+  --yellow: #f2d492;
+}
+
+* {
+  font-family: "Lato";
+}
+
+.big-heading {
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 55px;
+  color: var(--orange);
+  font-weight: 900;
+}

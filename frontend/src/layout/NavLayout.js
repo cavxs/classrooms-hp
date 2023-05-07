@@ -1,8 +1,10 @@
-import React from "react";
+import { useState, useEffect, useContext } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import styles from "./styles.module.css";
+import { AuthContext } from "../context/AuthContext";
 
 const NavigationBar = () => {
+  const { user } = useContext(AuthContext);
   return (
     <nav style={styles["nav"]}>
       <ul style={styles[""]}>
@@ -27,14 +29,7 @@ const NavigationBar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink
-            to="/profile"
-            className={({ isActive, isPending }) =>
-              isActive ? styles["navlinkactive"] : ""
-            }
-          >
-            Profile
-          </NavLink>
+          <NavLink>{user ? "@" + user.username : "Profile"}</NavLink>
         </li>
       </ul>
     </nav>

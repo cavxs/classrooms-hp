@@ -1,0 +1,31 @@
+.teacher {
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.grade {
+  text-align: center;
+  color: #727272;
+}
+.qninp {
+  margin-top: 10px;
+  background-color: #f3f3f3;
+  border: none;
+  outline: none;
+  padding: 0 5px;
+  height: 35px;
+  font-size: 25px;
+}
+
+.qn {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.true {
+  background-color: #d0e7c8;
+}
+
+.false {
+  background-color: #fccbcb;
+}

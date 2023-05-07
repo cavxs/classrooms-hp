@@ -3,34 +3,83 @@ h1 {
 }
 .examname {
   display: block;
-  margin: auto;
+  margin: -20px auto 40px;
   text-align: center;
   font-weight: bold;
 }
 .question {
-  margin: 20px 10px;
+  margin: 30px 10px;
+  font-weight: 700;
+  font-size: 25px;
 }
 
 input {
   font-size: large;
 }
 
+.qninp {
+  background-color: #f3f3f3;
+  border: none;
+  outline: none;
+  padding: 0 5px;
+  height: 35px;
+  font-size: 25px;
+}
+
 .question > input {
   width: 90%;
   margin-left: 10px;
 }
-
-.question ol {
+.mcs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.question ul {
+  margin: 15px 0 0 50px;
   width: 70%;
-  list-style-type: lower-alpha;
+  list-style-type: disc;
 }
 
-.question ol li {
+.question ul li {
   margin-bottom: 8px;
   width: 100%;
 }
-.question ol input {
+
+.question ul li:nth-child(1)::marker {
+  color: #71ac5c;
+}
+
+.question ul li::marker {
+  /* line-height: 20px; */
+  font-size: 35px;
+  color: #606060;
+}
+.question ul input {
   width: 90%;
   margin-right: 10px;
   display: inline-block;
+}
+
+.bbtns {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.bbtns button {
+  width: 300px;
+  display: block;
+}
+
+.x {
+  background-color: var(--red);
+  margin: 20px auto 0;
+  display: block;
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 30px;
 }

@@ -1,0 +1,47 @@
+.start-pg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 200px;
+}
+
+.start-pg-container .exam-name {
+  margin: 0;
+}
+
+.start-pg-container .classroom {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.exam-end {
+  display: block;
+  margin: 20px auto 0;
+}
+
+.msg {
+  color: var(--red);
+}
+
+.btn {
+  margin-top: 30px;
+}
+
+.question > h2 {
+  text-align: left;
+  font-size: 30px;
+}
+
+.qninp {
+  background-color: #f3f3f3;
+  border: none;
+  outline: none;
+  padding: 0 5px;
+  height: 35px;
+  width: 100%;
+  font-weight: 300;
+  font-size: 25px;
+}
