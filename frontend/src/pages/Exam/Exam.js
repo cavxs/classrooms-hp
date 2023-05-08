@@ -4,18 +4,93 @@ import styles from "./style.module.css";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 
+const MC = ({ n, q, qChange }) => {
+  return (
+    <div className={styles["mcs"]}>
+      <ul>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ia_" + n}
+              value="a"
+              onChange={(e) => {
+                qChange(n, "a");
+              }}
+            />
+
+            {q.a}
+            <span></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ib_" + n}
+              value="b"
+              onChange={(e) => {
+                qChange(n, "b");
+              }}
+            />
+            {q.b}
+            <span></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ic_" + n}
+              value="c"
+              onChange={(e) => {
+                qChange(n, "c");
+              }}
+            />
+
+            {q.c}
+            <span></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"id_" + n}
+              value="d"
+              onChange={(e) => {
+                qChange(n, "d");
+              }}
+            />
+            {q.d}
+            <span></span>
+          </label>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 const Question = ({ q, n, AD, SAFQ }) => (
   <div className={styles["question"]}>
     <h2>
       Q{n + 1}. {q.text}
     </h2>
-    <input
-      type="text"
-      className={styles["qninp"]}
-      placeholder="Type your answer"
-      value={AD[n]}
-      onChange={(e) => SAFQ(n, e.target.value)}
-    />
+    {q.type == "field" ? (
+      <input
+        type="text"
+        className={styles["qninp"]}
+        placeholder="Type your answer"
+        value={AD[n]}
+        onChange={(e) => SAFQ(n, e.target.value)}
+      />
+    ) : (
+      <MC q={q} n={n} qChange={SAFQ} />
+    )}
   </div>
 );
 
@@ -71,6 +146,7 @@ const Exam = () => {
               onClick={() => {
                 apx.get(`exams/start/${eid}/`).then((res) => {
                   if (res.data) {
+                    console.log(res.data);
                     setExamData((old) => ({
                       ...old,
                       started: true,

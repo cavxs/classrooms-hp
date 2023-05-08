@@ -3,6 +3,105 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./style.module.css";
 
+const MC = ({ n, q, ans, corrected = undefined }) => {
+  console.log(ans);
+  return (
+    <div className={styles["mcs"]}>
+      <ul>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ia_" + n}
+              value="a"
+              checked={ans === "a"}
+              disabled
+            />
+            {q.a}
+            <span
+              style={
+                corrected === undefined
+                  ? null
+                  : corrected
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ib_" + n}
+              value="b"
+              checked={ans === "b"}
+              disabled
+            />
+            {q.b}
+            <span
+              style={
+                corrected === undefined
+                  ? null
+                  : corrected
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ic_" + n}
+              value="c"
+              checked={ans === "c"}
+              disabled
+            />
+
+            {q.c}
+            <span
+              style={
+                corrected === undefined
+                  ? null
+                  : corrected
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"id_" + n}
+              value="d"
+              checked={ans === "d"}
+              disabled
+            />
+            {q.d}
+            <span
+              style={
+                corrected === undefined
+                  ? null
+                  : corrected
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 const AnswersView = ({ eid, answers_id, apx }) => {
   const [data, setData] = useState({});
 
@@ -50,21 +149,30 @@ const AnswersView = ({ eid, answers_id, apx }) => {
           <h3 style={{ fontSize: 24 }}>
             Q{i + 1}. {q.text}
           </h3>
-          <p
-            className={[
-              styles["qninp"],
-              styles[
-                currentGrades === undefined
-                  ? ""
-                  : currentGrades[i]
-                  ? "true"
-                  : "false"
-              ],
-            ].join(" ")}
-          >
-            <div className={styles["false-slider"]}></div>
-            {data?.data[i]}
-          </p>
+          {q.type == "field" ? (
+            <p
+              className={[
+                styles["qninp"],
+                styles[
+                  currentGrades === undefined
+                    ? ""
+                    : currentGrades?.at(i)
+                    ? "true"
+                    : "false"
+                ],
+              ].join(" ")}
+            >
+              <div className={styles["false-slider"]}></div>
+              {data?.data[i]}
+            </p>
+          ) : (
+            <MC
+              n={i}
+              q={q}
+              ans={data?.data[i]}
+              corrected={currentGrades?.at(i)}
+            />
+          )}
           <div className={styles["correcting"]}>
             <button
               className={["button", "hover-effect"].join(" ")}
@@ -133,7 +241,7 @@ const Check = () => {
                   navigate(String(s.id));
                 }}
               >
-                {s.taker__first_name}
+                {s.taker__first_name} {s.taker__last_name}
               </li>
             ))}
           </ul>

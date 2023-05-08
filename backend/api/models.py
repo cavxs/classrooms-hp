@@ -72,7 +72,10 @@ class Exam(models.Model):
     questions = models.JSONField()
 
     def __str__(self) -> str:
-        return f"{self.name} exam on {self.classroom.name} by {self.teacher.username}"
+        if hasattr(self, "classroom"):
+            return f"{self.name} exam on {self.classroom.name} by {self.teacher.username}"
+        else:
+            return f"{self.name} by {self.teacher.username}"
     
 
 class ExamTemplate(models.Model):

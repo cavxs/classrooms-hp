@@ -7,7 +7,11 @@ import Popup from "../../components/Popup/Popup";
 
 const Classroom = () => {
   const [classroomData, setClassroomData] = useState();
-  const [popups, setPopups] = useState({ add: false, exam_select: false });
+  const [popups, setPopups] = useState({
+    add: false,
+    exam_select: false,
+    delete_confirm: false,
+  });
   const [exams, setExams] = useState([]);
   const { apx } = useContext(AuthContext);
   const { id: cid } = useParams();
@@ -97,9 +101,20 @@ const Classroom = () => {
                   <li className="hover-effect no-shadow" key={i}>
                     {s.first_name} {s.last_name}
                     {classroomData?.is_owner ? (
-                      <div className={styles["st-options"]}>
+                      <div
+                        className={[
+                          styles["st-options"],
+                          !s?.grade
+                            ? null
+                            : s.grade == "took"
+                            ? styles["took"]
+                            : styles["checked"],
+                        ].join(" ")}
+                      >
                         <div></div>
-                        <h2>4/5</h2>
+                        <h2>
+                          {1}/{classroomData?.exam_questions}
+                        </h2>
                       </div>
                     ) : null}
                   </li>
@@ -129,13 +144,34 @@ const Classroom = () => {
               >
                 Assign Exam
               </button>
+              <button
+                className={["button", "hover-effect", styles["ownerbtn"]].join(
+                  " "
+                )}
+                style={{ backgroundColor: "#b65f5f" }}
+                onClick={() => showPopup("delete_confirm")(true)}
+              >
+                Delete Classroom
+              </button>
             </div>
-          ) : (
+          ) : classroomData?.your_grade ? (
             <div className={styles["last-grade"]}>
               <h5>Your Last Grade</h5>
-              <h3>Ungraded</h3>
+              <h3
+                style={{
+                  color:
+                    classroomData.your_grade?.filter((x) => x === true)
+                      ?.length ?? 0 >= classroomData.exam_questions / 2
+                      ? "#407A46"
+                      : "#B65F5F",
+                }}
+              >
+                {classroomData.your_grade?.filter((x) => x === true)?.length ??
+                  0}
+                /{classroomData.exam_questions}
+              </h3>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
       {/* <h2>Students ({classroomData?.students.length})</h2> */}
@@ -186,6 +222,28 @@ const Classroom = () => {
                 </li>
               ))}
           </ul>
+        </Popup>
+      )}
+      {popups.delete_confirm && (
+        <Popup
+          shown={showPopup("delete_confirm")}
+          title="Confirm Deletion"
+          buttons={[
+            { text: "Cancel" },
+            {
+              text: "Delete",
+              click: () => {
+                apx.delete(`classrooms/${cid}/`).then((res) => {
+                  console.log(res.data);
+                  if (res?.status === 204) navigate("/classrooms");
+                });
+              },
+            },
+          ]}
+        >
+          <p style={{ textAlign: "center", fontSize: 18 }}>
+            Are you sure you want to delete this classroom?
+          </p>
         </Popup>
       )}
     </div>

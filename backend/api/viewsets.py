@@ -7,7 +7,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-
 from .models import User, Classroom, Exam, ExamTemplate, Answers
 from .serializers import CustommRefreshToken, CustomTokenObtainPairSerializer, ClassroomsSerializer, ExamsSerializer, ClassroomListSerializer, ExamsTemplateListSerializer, ExamsTemplateSerializer, AnswersSerializer, ExamsPageSerializer, AnswersDetailedSerializer
 
@@ -67,11 +66,18 @@ class ClassroomsViewSet(ModelViewSet):
 
 
     def create(self, request):
-        serializer = ClassroomsSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(teacher=request.user)
         return Response(serializer.data,status=201)
     
+    def destroy(self, request, pk=None):
+        classroom = self.get_object()
+        if request.user == classroom.teacher:
+            return super().destroy(self, request, pk)
+        else:
+            return Response("You are not the teacher", status=400)
+
     @action(detail=False, methods=['post'])
     def join(self, request):
         code = request.data.get('code')
@@ -98,9 +104,8 @@ class ClassroomsViewSet(ModelViewSet):
                 classroom.exam.delete()
             exam_t_id = request.data.get('exam')
             exam_t = ExamTemplate.objects.get(id=exam_t_id)
-            exam = Exam(name=exam_t.name, teacher=request.user, questions=exam_t.questions)
+            exam = Exam(name=exam_t.name, teacher=request.user, questions=exam_t.questions, classroom=classroom)
             exam.save()
-            classroom.exam = exam
             classroom.save()
             serializer = self.get_serializer(classroom)
             return Response(serializer.data, status=200)

@@ -116,7 +116,7 @@
 .st-options {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   float: right;
   width: 100px;
@@ -130,10 +130,24 @@
   background-color: var(--red);
   border-radius: 20px;
 }
+.st-options.took div {
+  background-color: var(--green);
+}
+
+.st-options.checked div {
+  background-color: var(--green);
+}
+
+.st-options.checked h2 {
+  display: inline;
+}
 
 .st-options h2 {
+  display: none;
   font-size: 30px;
+  font-weight: 900;
   margin-left: 7px;
+  color: #6a6a6a;
 }
 
 .last-grade {

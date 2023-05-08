@@ -4,6 +4,105 @@ import { useParams } from "react-router-dom";
 
 import styles from "./style.module.css";
 
+const MC = ({ n, q, ans, correct }) => {
+  console.log(ans);
+  return (
+    <div className={styles["mcs"]}>
+      <ul>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ia_" + n}
+              value="a"
+              checked={ans === "a"}
+              disabled
+            />
+            {q.a}
+            <span
+              style={
+                correct === undefined
+                  ? null
+                  : correct
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ib_" + n}
+              value="b"
+              checked={ans === "b"}
+              disabled
+            />
+            {q.b}
+            <span
+              style={
+                correct === undefined
+                  ? null
+                  : correct
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"ic_" + n}
+              value="c"
+              checked={ans === "c"}
+              disabled
+            />
+
+            {q.c}
+            <span
+              style={
+                correct === undefined
+                  ? null
+                  : correct
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name={n}
+              id={"id_" + n}
+              value="d"
+              checked={ans === "d"}
+              disabled
+            />
+            {q.d}
+            <span
+              style={
+                correct === undefined
+                  ? null
+                  : correct
+                  ? { backgroundColor: "rgb(112 171 91)" }
+                  : { backgroundColor: "rgb(182 95 95)" }
+              }
+            ></span>
+          </label>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 const Answers = () => {
   const { apx } = useContext(AuthContext);
   const { id: eid } = useParams();
@@ -45,20 +144,29 @@ const Answers = () => {
             <h2 className={styles["qn"]}>
               Q{i + 1}. {q.text}
             </h2>
-            <p
-              className={[
-                styles["qninp"],
-                styles[
-                  data?.answers?.grading?.at(i) === undefined
-                    ? ""
-                    : data?.answers?.grading?.at(i)
-                    ? "true"
-                    : "false"
-                ],
-              ].join(" ")}
-            >
-              {data.answers.data[i]}
-            </p>
+            {q.type == "field" ? (
+              <p
+                className={[
+                  styles["qninp"],
+                  styles[
+                    data?.answers?.grading?.at(i) === undefined
+                      ? ""
+                      : data?.answers?.grading?.at(i)
+                      ? "true"
+                      : "false"
+                  ],
+                ].join(" ")}
+              >
+                {data.answers.data[i]}
+              </p>
+            ) : (
+              <MC
+                q={q}
+                ans={data?.answers?.data[i]}
+                correct={data?.answers?.grading?.at(i)}
+                n={i}
+              />
+            )}
           </div>
         );
       }) ?? null}

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User, Classroom, Exam, ExamTemplate, Answers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.exceptions import ObjectDoesNotExist
 
 class RegistrationSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=True)
@@ -34,10 +35,11 @@ class ClassroomsSerializer(serializers.ModelSerializer):
     teacher_firstname = serializers.SerializerMethodField() 
     exam_name = serializers.SerializerMethodField()
     students = serializers.SerializerMethodField()
-
+    exam_questions = serializers.SerializerMethodField()
+    your_grade = serializers.SerializerMethodField()
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'teacher', 'teacher_firstname', 'students', 'exam', 'exam_name']
+        fields = ['id', 'name', 'teacher', 'your_grade', 'teacher_firstname', 'students','exam_questions', 'exam', 'exam_name']
         extra_kwargs = {"teacher":{"read_only":True}}
 
     def get_teacher_firstname(self, obj):
@@ -46,8 +48,32 @@ class ClassroomsSerializer(serializers.ModelSerializer):
     def get_exam_name(self, obj):
         if obj.exam:
             return obj.exam.name
+        
+    def get_exam_questions(self, obj):
+        if obj.exam:
+            return len(obj.exam.questions)
     
+    def get_your_grade(self, obj):
+        user = self.context.get('request').user
+        is_teacher = user == obj.teacher
+        current_exam = obj.exam
+        if not is_teacher and current_exam is not None:
+            answers = Answers.objects.filter(exam=current_exam, taker=user)
+            if answers.exists():
+                return  answers.first().grading
+
+        
+
     def get_students(self, obj):
+        user = self.context.get('request').user
+        is_teacher = user == obj.teacher
+        current_exam = obj.exam
+        if is_teacher and current_exam is not None:
+            answers = Answers.objects.filter(exam=current_exam)
+            if answers:
+                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': answers.get(taker=s.id).grading if answers.filter(taker=s.id).exists() else "took"} for s in obj.students.all()]
+            else:
+                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': "failed"} for s in obj.students.all()]
         return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name} for s in obj.students.all()]
 
     def to_representation(self, obj):
