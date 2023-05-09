@@ -71,9 +71,9 @@ class ClassroomsSerializer(serializers.ModelSerializer):
         if is_teacher and current_exam is not None:
             answers = Answers.objects.filter(exam=current_exam)
             if answers:
-                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': answers.get(taker=s.id).grading if answers.filter(taker=s.id).exists() else "took"} for s in obj.students.all()]
+                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': answers.get(taker=s.id).grading if answers.filter(taker=s.id).exists() else "not_taken"} for s in obj.students.all()]
             else:
-                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': "failed"} for s in obj.students.all()]
+                return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name, 'grade': "not_taken"} for s in obj.students.all()]
         return [{'id': s.id, 'first_name': s.first_name, 'last_name': s.last_name} for s in obj.students.all()]
 
     def to_representation(self, obj):
@@ -178,8 +178,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
         # print("what")
         return token
+    
     
 
 

@@ -29,8 +29,11 @@ const Classroom = () => {
   useEffect(() => {
     console.log(cid);
     apx.get(`classrooms/${cid}/`).then((res) => {
-      console.log(res.data);
-      setClassroomData(res.data);
+      if (!res) return navigate("/not-found");
+      if (res?.data) {
+        console.log(res.data);
+        setClassroomData(res.data);
+      }
     });
   }, []);
 
@@ -64,13 +67,27 @@ const Classroom = () => {
                 </div>
                 <div className={styles["exam-buttons"]}>
                   {classroomData?.is_owner ? (
-                    <button
-                      onClick={() => {
-                        navigate(`/exam/${classroomData?.exam}/check`);
-                      }}
-                    >
-                      C
-                    </button>
+                    <>
+                      <button
+                        style={{ fontSize: 15, fontWeight: 900 }}
+                        onClick={() => {
+                          navigate(`/exam/${classroomData?.exam}/check`);
+                        }}
+                      >
+                        Check
+                      </button>
+                      <button
+                        style={{ backgroundColor: "#b65f5f" }}
+                        onClick={() => {
+                          apx.put(`/classrooms/${cid}/cancel/`).then((res) => {
+                            console.log(res);
+                            setClassroomData(res.data);
+                          });
+                        }}
+                      >
+                        X
+                      </button>
+                    </>
                   ) : classroomData?.taken ? (
                     <button
                       onClick={() =>
@@ -92,7 +109,9 @@ const Classroom = () => {
                 </div>
               </div>
             </>
-          ) : null}
+          ) : (
+            <h1>Students</h1>
+          )}
 
           <div className={styles["student-list"]}>
             {classroomData?.students?.length ? (
@@ -104,16 +123,21 @@ const Classroom = () => {
                       <div
                         className={[
                           styles["st-options"],
-                          !s?.grade
+                          s?.grade == "not_taken"
                             ? null
-                            : s.grade == "took"
+                            : s?.grade == "took"
                             ? styles["took"]
                             : styles["checked"],
                         ].join(" ")}
                       >
                         <div></div>
                         <h2>
-                          {1}/{classroomData?.exam_questions}
+                          {Array.isArray(s?.grade) ? (
+                            <>
+                              {s?.grade?.filter((x) => x === true)?.length ?? 0}
+                              /{classroomData?.exam_questions}
+                            </>
+                          ) : null}
                         </h2>
                       </div>
                     ) : null}
@@ -154,24 +178,46 @@ const Classroom = () => {
                 Delete Classroom
               </button>
             </div>
-          ) : classroomData?.your_grade ? (
-            <div className={styles["last-grade"]}>
-              <h5>Your Last Grade</h5>
-              <h3
-                style={{
-                  color:
-                    classroomData.your_grade?.filter((x) => x === true)
-                      ?.length ?? 0 >= classroomData.exam_questions / 2
-                      ? "#407A46"
-                      : "#B65F5F",
-                }}
-              >
-                {classroomData.your_grade?.filter((x) => x === true)?.length ??
-                  0}
-                /{classroomData.exam_questions}
-              </h3>
-            </div>
-          ) : null}
+          ) : (
+            <>
+              {classroomData?.your_grade ? (
+                <div className={styles["last-grade"]}>
+                  <h5>Your Last Grade</h5>
+                  <h3
+                    style={{
+                      color:
+                        classroomData.your_grade?.filter((x) => x === true)
+                          ?.length ?? 0 >= classroomData.exam_questions / 2
+                          ? "#407A46"
+                          : "#B65F5F",
+                    }}
+                  >
+                    {classroomData.your_grade?.filter((x) => x === true)
+                      ?.length ?? 0}
+                    /{classroomData.exam_questions}
+                  </h3>
+                </div>
+              ) : null}
+              <div className={styles["buttons"]}>
+                <button
+                  className={[
+                    "button",
+                    "hover-effect",
+                    styles["ownerbtn"],
+                  ].join(" ")}
+                  style={{ backgroundColor: "#b65f5f" }}
+                  onClick={() => {
+                    apx.put(`classrooms/${cid}/leave/`).then((res) => {
+                      console.log(res.data);
+                      if (res?.status === 200) navigate("/classrooms");
+                    });
+                  }}
+                >
+                  Leave Classroom
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
       {/* <h2>Students ({classroomData?.students.length})</h2> */}

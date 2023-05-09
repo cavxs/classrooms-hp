@@ -114,6 +114,7 @@ const Exam = () => {
   useEffect(() => {
     console.log(eid);
     apx.get(`exams/get/${eid}/`).then((res) => {
+      if (!res) return navigate("/not-found");
       console.log(res.data);
       setExamData((old) => ({ ...old, ...res.data }));
     });

@@ -15,7 +15,7 @@
 }
 
 .form {
-  margin: 100px auto;
+  margin: 50px auto;
   display: flex;
   flex-direction: column;
   width: 80%;
@@ -36,13 +36,13 @@
 .tinput:focus,
 .tinput:hover {
   outline: none;
-  border-bottom-color: #810000;
+  border-bottom-color: #8d4312;
 }
 
 .submit {
   background: #fff;
   font-size: 14px;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 16px 20px;
   border-radius: 26px;
   border: 1px solid #d4d3e8;
@@ -51,8 +51,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  color: #810000;
-  box-shadow: 0px 2px 2px #810000;
+  color: #8d4312;
+  box-shadow: 0px 2px 2px #8d4312;
   cursor: pointer;
   transition: 0.2s;
 }

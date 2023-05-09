@@ -15,6 +15,7 @@ import ExamMaker from "./pages/ExamMaker/ExamMaker";
 import Exams from "./pages/Exams/Exams";
 import Answers from "./pages/Answers/Answers";
 import Check from "./pages/Check/Check";
+import NotFoundPage from "./pages/PageNotFound/PageNotFound";
 
 function App() {
   return (
@@ -33,12 +34,14 @@ function App() {
             <Route path="exams" element={<Exams />} />
             <Route path="profile" />
             <Route path="make" element={<ExamMaker />} />
+            <Route path="make/:id" element={<ExamMaker />} />
           </Route>
         </Route>
-        <Route element={<AuthLayout />}>
+        <Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );

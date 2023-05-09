@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 import style from "./style.module.css";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({});
@@ -23,6 +24,9 @@ const Login = () => {
   };
   return (
     <>
+      <h1 className="big-heading" style={{ color: "#8d4312", marginBottom: 0 }}>
+        Login
+      </h1>
       <form className={style["form"]} onSubmit={submit}>
         <input
           type="text"
@@ -40,6 +44,9 @@ const Login = () => {
           required
           placeholder="Password"
         />
+        <p>
+          Don't have an account? <Link to="/register">Register.</Link>
+        </p>
         {errMsg && (
           <p style={{ color: "red", fontWeight: "bold", margin: "10px 0 0 0" }}>
             {errMsg}

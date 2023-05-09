@@ -26,9 +26,7 @@ export const AuthProvider = ({ children }) => {
   const storedTokens = JSON.parse(localStorage.getItem("authTokens")) || null;
 
   const [authTokens, setAuthTokens] = useState(storedTokens);
-  const [user, setUser] = useState(
-    storedTokens ? jwtDecode(storedTokens.access) : null
-  );
+  const [user, setUser] = useState(storedTokens ? storedTokens.user : null);
 
   const getAccessT = () => authTokens?.access || null;
 
@@ -46,11 +44,20 @@ export const AuthProvider = ({ children }) => {
         "There is no access token passed to the saveTokens function."
       );
     const newtokens = { ...authTokens, ...tokens };
+    const decodation = jwtDecode(tokens.access);
+    if (decodation?.username) {
+      newtokens.user = {
+        username: decodation.username,
+        first_name: decodation.first_name,
+        last_name: decodation.last_name,
+      };
+    }
+    console.log(newtokens);
     setAuthTokens(newtokens);
     // decode and store the user
-    setUser(() => {
-      const decodation = jwtDecode(tokens.access);
+    console.log(newtokens);
 
+    setUser(() => {
       console.log(decodation, newtokens);
       if (!decodation?.username && newtokens?.user?.username)
         decodation["username"] = newtokens.user.username;
@@ -65,11 +72,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password, error) => {
     try {
       const res = await authAxios.post("/login/", { username, password });
-      navigate("/", { replace: true });
+      navigate("/classrooms", { replace: true });
       saveTokens(res.data);
     } catch (err) {
       // console.error(err);
-      if (error) error(err.response.status);
+      if (err) console.error(err);
     }
   };
 
@@ -78,7 +85,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("authTokens");
     if (login) return navigate("/login");
-    navigate("/");
+    navigate("/classrooms");
   };
 
   const register = async (

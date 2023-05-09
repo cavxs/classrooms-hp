@@ -13,7 +13,7 @@ const Popup = ({
       <div className={styles["overlay"]} onClick={() => shown(false)}></div>
       <div className={styles["window"]}>
         <h2>{title}</h2>
-        {text && <p>{text}</p>}
+        {text && <p style={{ textAlign: "center" }}>{text}</p>}
         {children}
         <div className={styles["buttons"]}>
           {buttons.map((b, i) => (

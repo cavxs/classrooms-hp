@@ -4,20 +4,49 @@ import { AuthContext } from "../../context/AuthContext";
 import styles from "./style.module.css";
 import { useNavigate } from "react-router-dom";
 
-const ExamDiv = ({ name, linkk }) => {
+const ExamDiv = ({ name, linkk, edit_del = null }) => {
   const navigate = useNavigate();
+  const { apx } = useContext(AuthContext);
+  const [deleted, setDeleted] = useState(false);
   return (
-    <div
-      className={[styles["exam-div"], "hover-effect"].join(" ")}
-      onClick={() => {
-        if (linkk) navigate(linkk);
-      }}
-    >
-      <h2>{name}</h2>
-      <p>
-        Created by <span>Teacher</span>
-      </p>
-    </div>
+    <>
+      {!deleted && (
+        <div
+          className={[styles["exam-div"], "hover-effect"].join(" ")}
+          onClick={() => {
+            if (linkk) navigate(linkk);
+          }}
+        >
+          <h2>{name}</h2>
+          <p>
+            Created by <span>Teacher</span>
+          </p>
+          {edit_del ? (
+            <div className={styles["edit-del"]}>
+              <button
+                onClick={() => {
+                  apx.delete(edit_del["del"]).then((res) => {
+                    if (res) {
+                      setDeleted(true);
+                    }
+                  });
+                }}
+                style={{ backgroundColor: "red" }}
+                className="button hover-effect"
+              >
+                X
+              </button>
+              <button
+                onClick={() => navigate(edit_del["edit"])}
+                className="button hover-effect"
+              >
+                E
+              </button>
+            </div>
+          ) : null}
+        </div>
+      )}
+    </>
   );
 };
 
@@ -29,7 +58,7 @@ const Exams = () => {
     made: [],
   });
   const { apx } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   useEffect(() => {
     apx.get("exams/").then((res) => {
       if (res?.data) {
@@ -44,10 +73,9 @@ const Exams = () => {
     });
   }, []);
   return (
+    // TODO: remove the margin lefts and write a class in the css instead
     <div>
-      <h2 style={{ textAlign: "left" }} className="big-heading">
-        Current Exams
-      </h2>
+      <h2 className="big-heading lefted">Current Exams</h2>
       <div className={styles["exams-list"]}>
         {exams.current?.map((e, i) => (
           <ExamDiv key={i} name={e.name} linkk={`/exam/${e.id}/`} />
@@ -58,9 +86,33 @@ const Exams = () => {
           </h2>
         ) : null}
       </div>
-      <h2 style={{ textAlign: "left" }} className="big-heading">
-        Exams Given
-      </h2>
+      <h2 className="big-heading lefted">Exams Templates</h2>
+      <div className={styles["exams-list"]}>
+        {exams.made?.length == 0 ? (
+          <h2 style={{ marginLeft: 20 }}>
+            You haven't made any exam templates.
+          </h2>
+        ) : (
+          <>
+            {exams.made.map((e, i) => (
+              <ExamDiv
+                key={i}
+                name={e.name}
+                edit_del={{ edit: `/make/${e.id}`, del: `exams/${e.id}/` }}
+              />
+            )) ?? null}
+          </>
+        )}
+      </div>
+      <div className={styles["buttons"]}>
+        <button
+          onClick={() => navigate("/make")}
+          className="button hover-effect"
+        >
+          Create Template
+        </button>
+      </div>
+      <h2 className="big-heading lefted">Exams Given</h2>
       <div className={styles["exams-list"]}>
         {exams.given.map((e, i) => (
           <ExamDiv key={i} name={e.name} linkk={`/exam/${e.id}/`} />
@@ -69,9 +121,7 @@ const Exams = () => {
           <h2 style={{ marginLeft: 20 }}>You have not given any exams.</h2>
         ) : null}
       </div>
-      <h2 style={{ textAlign: "left" }} className="big-heading">
-        Past Exams
-      </h2>
+      <h2 className="big-heading lefted">Past Exams</h2>
       <div className={styles["exams-list"]}>
         {exams.past.map((e, i) => (
           <ExamDiv key={i} linkk={`/exam/${e.exam__id}/`} name={e.exam__name} />
@@ -80,15 +130,6 @@ const Exams = () => {
           <h2 style={{ marginLeft: 20 }}>
             You have not taken any exams in the past.
           </h2>
-        ) : null}
-      </div>
-      <h2 style={{ textAlign: "left" }} className="big-heading">
-        Exams Templates
-      </h2>
-      <div className={styles["exams-list"]}>
-        {exams.made.map((e, i) => <ExamDiv key={i} name={e.name} />) ?? null}
-        {exams.made?.length == 0 ? (
-          <h2 style={{ marginLeft: 20 }}>You have made any exam.</h2>
         ) : null}
       </div>
     </div>

@@ -36,6 +36,10 @@ code {
   font-weight: 900;
 }
 
+.big-heading.lefted {
+  text-align: left;
+}
+
 .button {
   width: 140px;
   height: 50px;
@@ -67,4 +71,43 @@ code {
 .hover-effect:hover {
   box-shadow: 10px 10px 70px 12px rgba(0, 0, 0, 0.1);
   transform: translate(-3px, -3px);
+}
+
+@media screen and (max-width: 650px) {
+  body {
+    padding: 0 10px;
+  }
+  .big-heading {
+  }
+  .big-heading.lefted {
+    text-align: center;
+  }
+}
+
+.rainbow-text {
+  background: linear-gradient(
+    to right,
+    #9c4f96,
+    #ff6355,
+    #fba949,
+    #fae442,
+    #8bd448,
+    #2aa8f2
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow_animation 5s ease-in-out infinite;
+  background-size: 400% 100%;
+}
+
+@keyframes rainbow_animation {
+  0%,
+  100% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 100% 0;
+  }
 }

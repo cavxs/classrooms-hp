@@ -11,6 +11,7 @@
   display: flex;
   width: 100%;
   flex-direction: row;
+  margin-bottom: 80px;
 }
 
 .left {
@@ -71,6 +72,7 @@
 .exam-buttons button {
   width: 80px;
   height: 80px;
+  margin-left: 20px;
   border-radius: 100px;
   background-color: var(--orange);
   color: white;
@@ -160,6 +162,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 
   box-shadow: 16px 20px 57px 9px rgba(0, 0, 0, 0.1);
 }
@@ -175,7 +178,7 @@
 }
 
 .last-grade h3 {
-  font-size: 53px;
+  font-size: 70px;
   font-weight: 700;
   color: var(--darker);
 }
@@ -196,4 +199,56 @@
   box-sizing: border-box;
   user-select: none;
   cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+  .layout {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+    flex-direction: column;
+  }
+  .left {
+    width: 100%;
+  }
+  .right {
+    width: 100%;
+    padding: 0;
+  }
+  .buttons {
+    width: 90%;
+    margin: 0 auto;
+  }
+  .ownerbtn {
+    width: 100%;
+  }
+
+  .last-grade {
+    width: 80%;
+    margin: 0 auto 20px;
+  }
+  .last-grade h3 {
+    font-size: 80px;
+  }
+}
+
+@media screen and (max-width: 610px) {
+  .active-exam {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 10px 0;
+    margin: 0 auto;
+    border-radius: 50px;
+  }
+
+  .exam-status h3 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .exam-status h5 {
+    text-align: center;
+    margin-bottom: 5px;
+  }
 }

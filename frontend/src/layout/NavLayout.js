@@ -2,8 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import styles from "./styles.module.css";
 import { AuthContext } from "../context/AuthContext";
+import Popup from "../components/Popup/Popup";
 
-const NavigationBar = () => {
+const NavigationBar = ({ sl }) => {
   const { user } = useContext(AuthContext);
   return (
     <nav style={styles["nav"]}>
@@ -29,7 +30,9 @@ const NavigationBar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink>{user ? "@" + user.username : "Profile"}</NavLink>
+          <div onClick={() => sl(true)}>
+            {user ? "@" + user.username : "Profile"}
+          </div>
         </li>
       </ul>
     </nav>
@@ -37,10 +40,28 @@ const NavigationBar = () => {
 };
 
 const NavLayout = () => {
+  const [loutpop, showLogout] = useState(false);
+  const { logout, user } = useContext(AuthContext);
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar sl={showLogout} />
       <Outlet />
+      {loutpop && (
+        <Popup
+          title="Logout"
+          text={`Are you sure you wanna log out from ${user?.username}?`}
+          buttons={[
+            { text: "Cancel" },
+            {
+              text: "Logout",
+              click: () => {
+                logout(true);
+              },
+            },
+          ]}
+          shown={(v) => showLogout(v)}
+        />
+      )}
     </div>
   );
 };

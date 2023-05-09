@@ -1,10 +1,13 @@
 .exam-div {
+  display: flex;
+  flex-direction: column;
   width: 320px;
   height: 350px;
   padding: 20px;
   background-color: var(--yellow);
   border-radius: 20px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .exam-div > h2 {
@@ -27,9 +30,76 @@
 .exams-list {
   display: flex;
   flex-direction: row;
-  margin-bottom: 50px;
+  margin: -70px -40px -20px;
+  overflow: auto;
+  padding: 70px 0;
+}
+.exams-list > h2 {
+  padding-left: 40px;
+}
+.exams-list::-webkit-scrollbar {
+  display: none;
 }
 
-.exams-list div {
+.exams-list > div {
   margin-left: 20px;
+}
+
+.buttons {
+}
+
+.buttons button {
+  width: 300px;
+}
+
+.edit-del {
+  display: flex;
+  align-self: center;
+  margin: 0;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 70%;
+  margin-top: auto;
+}
+
+.edit-del button {
+  width: 80px;
+}
+
+@media screen and (max-width: 650px) {
+  /* .exams-list {
+    margin-top: 20px;
+  } */
+  .exams-list > h2 {
+    text-align: center;
+    width: 100%;
+    padding-left: 0;
+    font-size: 40px;
+  }
+  .exam-div {
+    width: 420px;
+    height: 490px;
+  }
+  .exam-div > h2 {
+    font-size: 50px;
+    text-align: center;
+  }
+  .exam-div > p {
+    text-align: center;
+    font-size: 30px;
+  }
+  .edit-del button {
+    width: 140px;
+    height: 100px;
+    font-size: 40px;
+  }
+  .buttons {
+  }
+  .buttons button {
+    display: block;
+    margin: auto;
+    width: 90%;
+    height: 100px;
+    font-size: 35px;
+  }
 }

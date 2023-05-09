@@ -1,0 +1,10 @@
+.message {
+  text-align: center;
+  font-size: 20px;
+}
+
+.link {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import styles from "./style.module.css";
 import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MC = ({ n, q, qChange }) => {
   const [correct, setCorrect] = useState(0);
@@ -88,6 +88,17 @@ const ExamMaker = () => {
 
   const { apx } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { id: eid } = useParams();
+  useEffect(() => {
+    if (eid) {
+      apx.get(`exams/${eid}/`).then((res) => {
+        if (res?.data) {
+          setExamData({ name: res.data.name });
+          setQuestions(res.data.questions);
+        }
+      });
+    }
+  }, []);
   const questionChange = (n, key, value, del = false) => {
     setQuestions((old) => {
       let f = structuredClone(old);
@@ -146,10 +157,21 @@ const ExamMaker = () => {
         className="button"
         style={{ display: "block", margin: "50px auto 100px" }}
         onClick={() => {
-          apx.post("exams/", { name: examData.name, questions }).then((res) => {
-            console.log(res);
-            if (res) navigate("/classrooms", { replace: true });
-          });
+          if (!eid) {
+            apx
+              .post("exams/", { name: examData.name, questions })
+              .then((res) => {
+                console.log(res);
+                if (res) navigate("/classrooms");
+              });
+          } else {
+            apx
+              .put(`exams/${eid}/`, { name: examData.name, questions })
+              .then((res) => {
+                console.log(res);
+                if (res) navigate("/exams");
+              });
+          }
         }}
       >
         Done

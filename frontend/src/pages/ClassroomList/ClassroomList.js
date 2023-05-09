@@ -27,7 +27,7 @@ const ClassroomList = () => {
   const [popups, setPopups] = useState({ classroom: false, join: false });
   const [classrooms, setClassrooms] = useState({ owner: [], non_owner: [] });
   const { apx } = useContext(AuthContext);
-
+  const [errMsg, setErrMsgs] = useState({ join: "" });
   const [code, setCode] = useState("");
 
   const [classroomName, setClassroomName] = useState("");
@@ -45,6 +45,10 @@ const ClassroomList = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    setErrMsgs({ join: "" });
+  }, [popups]);
 
   return (
     <div>
@@ -81,6 +85,7 @@ const ClassroomList = () => {
           <input
             style={{ marginTop: 20 }}
             type="text"
+            placeholder="Classroom Name"
             value={classroomName}
             onChange={(e) => setClassroomName(e.target.value)}
           />
@@ -97,7 +102,6 @@ const ClassroomList = () => {
               click: () => {
                 // send a request to the server asking it to join a classroom
                 apx.post("classrooms/join/", { code }).then((res) => {
-                  console.log(res);
                   if (res?.status === 201) {
                     setPopups((old) => ({ ...old, join: false }));
                     setClassrooms((old) => {
@@ -107,7 +111,10 @@ const ClassroomList = () => {
                       };
                     });
                   } else {
-                    // TODO: make an error message
+                    setErrMsgs((old) => ({
+                      ...old,
+                      join: "No classroom with that code.",
+                    }));
                   }
                 });
               },
@@ -118,8 +125,20 @@ const ClassroomList = () => {
             style={{ marginTop: 20 }}
             type="text"
             value={code}
+            placeholder="Classroom Code"
             onChange={(e) => setCode(e.target.value)}
           />
+          <p
+            style={{
+              textAlign: "center",
+              color: "red",
+              marginBottom: 0,
+              marginTop: errMsg?.join?.length ? 15 : 0,
+              // height: errMsg?.join?.length ? "auto" : 0,
+            }}
+          >
+            {errMsg.join}
+          </p>
         </Popup>
       )}
       {classrooms.non_owner?.length ? (
@@ -155,18 +174,24 @@ const ClassroomList = () => {
           </div>
         </>
       ) : null}
-
+      {!classrooms.owner?.length && !classrooms.non_owner?.length && (
+        <>
+          <h1 className="big-heading">Classrooms</h1>
+          <h1>
+            Start by creating or joining a{" "}
+            <span className="rainbow-text">classroom.</span>
+          </h1>
+        </>
+      )}
       <div className={styles["cbuttons"]}>
         <div
           className="button hover-effect"
-          style={{ width: 300 }}
           onClick={() => setPopups((old) => ({ ...old, join: true }))}
         >
           Join a classroom
         </div>
         <div
           className="button hover-effect"
-          style={{ width: 300 }}
           onClick={() => setPopups((old) => ({ ...old, classroom: true }))}
         >
           Create a classroom

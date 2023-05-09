@@ -88,8 +88,17 @@ class ClassroomsViewSet(ModelViewSet):
             return Response("Could not join class", status=404)
         
         classroom.students.add(request.user)
-        serializer = ClassroomsSerializer(classroom)
+        classroom.save()
+        serializer = self.get_serializer(classroom)
         return Response(serializer.data, status=201)
+    
+    @action(detail=True, methods=['put'])
+    def leave(self, request, pk=None):
+        classroom = self.get_object()
+        classroom.students.remove(request.user)
+        classroom.save()
+        serializer = self.get_serializer(classroom)
+        return Response(serializer.data, status=200)
     
     @action(detail=True, methods=['put'])
     def assign(self, request, pk=None):
@@ -104,13 +113,27 @@ class ClassroomsViewSet(ModelViewSet):
                 classroom.exam.delete()
             exam_t_id = request.data.get('exam')
             exam_t = ExamTemplate.objects.get(id=exam_t_id)
-            exam = Exam(name=exam_t.name, teacher=request.user, questions=exam_t.questions, classroom=classroom)
+            exam = Exam(name=exam_t.name, teacher=request.user, questions=exam_t.questions)
             exam.save()
+            classroom.exam = exam
             classroom.save()
             serializer = self.get_serializer(classroom)
             return Response(serializer.data, status=200)
-        else:
-            return Response(status=401)
+        return Response(status=400)
+        
+    @action(detail=True, methods=['put'])
+    def cancel(self, request, pk=None):
+        classroom = self.get_object()
+        if request.user == classroom.teacher:
+            if classroom.exam is not None:
+                classroom.exam.delete()
+                classroom.exam= None
+                classroom.save()
+                print(classroom)
+                serializer = self.get_serializer(classroom)
+                return Response(serializer.data, status=200)
+        return Response(status=400)
+        
         
 
 class ExamsViewset(ModelViewSet):
@@ -134,9 +157,9 @@ class ExamsViewset(ModelViewSet):
             serializer = ExamsTemplateSerializer(templates, many=True)
             return Response(serializer.data, status=200)
         else: 
-            exams_made = ExamTemplate.objects.filter(teacher=request.user).values("name")
-            exams_given = Exam.objects.filter(teacher=request.user).values("id", "name")
-            exams_past = Answers.objects.filter(taker=request.user).values("exam__id", "exam__name", "grading")
+            exams_made = ExamTemplate.objects.filter(teacher=request.user).values("id", "name", "teacher__first_name")
+            exams_given = Exam.objects.filter(teacher=request.user).values("id", "name", "teacher__first_name")
+            exams_past = Answers.objects.filter(taker=request.user).values("exam__id", "exam__name", "exam__teacher__first_name", "grading")
             classrooms = request.user.classrooms_joined.all()
             exams_in_my_classrooms = Exam.objects.filter(classroom__in=classrooms)
             print(exams_in_my_classrooms)
@@ -153,6 +176,13 @@ class ExamsViewset(ModelViewSet):
             serializer.is_valid(raise_exception=True)
 
             return Response(serializer.data, status=200)
+
+    def retrieve(self, request, pk=None):
+        exam_template = self.get_object()
+        if exam_template.teacher == request.user:
+            return super().retrieve(self, request, pk)
+        else:
+            return Response(status=400)
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -242,6 +272,8 @@ class ExamsViewset(ModelViewSet):
 
             return Response(AnswersSerializer(answers).data, status=200)
 
+    
+    
 
 
 

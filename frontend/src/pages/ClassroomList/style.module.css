@@ -18,6 +18,9 @@ h2 {
   user-select: none;
 } */
 
+.cbuttons div {
+  width: 300px;
+}
 .cbuttons div h2 {
   margin: 0;
 }
@@ -90,4 +93,44 @@ h2 {
 
 .popup input[type="submit"] {
   display: block;
+}
+
+@media screen and (max-width: 880px) {
+  .classroom {
+    width: 90%;
+    height: 230px;
+  }
+  .classroom h2 {
+    font-size: 8vw;
+  }
+  .classroom p {
+    font-size: 3vw;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .cbuttons div {
+    width: 40vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .classroom {
+    width: 95%;
+  }
+  .classroom h2 {
+    font-size: 9vw;
+  }
+  .classroom p {
+    font-size: 4vw;
+  }
+  .cbuttons {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .cbuttons div {
+    margin-bottom: 20px;
+    width: 90%;
+  }
 }
