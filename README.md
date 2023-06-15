@@ -17,12 +17,12 @@ You have to install node in order to use this project since the frontend is made
 
 # Images
 
-![Image](./images/0.png)
-![Image](./images/1.png)
-![Image](./images/2.png)
-![Image](./images/3.png)
-![Image](./images/4.png)
-![Image](./images/5.png)
+![Image](./images/0.PNG)
+![Image](./images/1.PNG)
+![Image](./images/2.PNG)
+![Image](./images/3.PNG)
+![Image](./images/4.PNG)
+![Image](./images/5.PNG)
 
 # Distinctiveness and Complexity
 
