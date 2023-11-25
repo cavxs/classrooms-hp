@@ -137,16 +137,3 @@ Every folder in this folder contains a single page component used in the React a
 ### `src/components/Popup.jsx`
 
 This handles every single popup that there is in the app. It is imported by multiple pages, such as the ClassroomList page (in the join and create classrooms popup) and the Classroom page (in the classroom code, assign exam, and delete classroom popups)
-
-# What I have learned:
-
-This project took me around a month to complete but I believe it was worth it because I've learned a lot.
-
-- Mastered React from start-react-app
-- Mastered React Router DOM (especially using outlets, params, navigation, links)
-- Mastered JWT Authentication on the frontend and backend
-- Mastered Django Rest Framework and how it works from serializers to ViewSets
-- Learned more about security and permissions
-- Mastered linking both frontend and backend and communicating between them (which makes me now a fullstack developer)
-- I use git more frequently now
-- Much more I forgot about but now became part of my muscle memory
